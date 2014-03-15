@@ -1,0 +1,20 @@
+#!/bin/sh
+SYS_PATH=/sys/class/backlight/nvidia_backlight
+BRIGHTNESS_FILE=$SYS_PATH/brightness
+MAX_TRIES=100
+
+wait_for() {
+  if [ ! -f $1 ]; then echo "Waiting for: $1"; fi
+
+  for n in $(seq 1 $MAX_TRIES)
+  do
+    if [ -f $1 ]; then break; fi
+    printf "."
+    sleep 1
+  done
+  `$2`
+}
+
+wait_for $BRIGHTNESS_FILE "chmod go+w $BRIGHTNESS_FILE"
+
+printf 'done!'
